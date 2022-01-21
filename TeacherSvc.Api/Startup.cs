@@ -20,6 +20,8 @@ namespace TeacherSvc.Api
 {
     public class Startup
     {
+        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -37,6 +39,17 @@ namespace TeacherSvc.Api
             });
 
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:5001");
+                                      builder.AllowAnyMethod();
+                                      builder.AllowAnyHeader();
+                                  });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +63,8 @@ namespace TeacherSvc.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 
