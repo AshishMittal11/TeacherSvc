@@ -1,7 +1,9 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +11,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using TeacherSvc.Api.Configuration;
+using TeacherSvc.Api.Database;
 
 namespace TeacherSvc.Api
 {
@@ -26,6 +31,12 @@ namespace TeacherSvc.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<TeacherContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("TeacherDBConnectionString"));
+            });
+
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +57,8 @@ namespace TeacherSvc.Api
             {
                 endpoints.MapControllers();
             });
+
+            TeacherMappingConfiguration.Configure();
         }
     }
 }
