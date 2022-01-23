@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TeacherSvc.Api.CQRS.Command;
 using TeacherSvc.Api.CQRS.Query;
 using TeacherSvc.Api.DTO;
 
@@ -22,7 +23,7 @@ namespace TeacherSvc.Api.Controllers
         public async Task<List<TeacherDto>> GetAllTeachers()
         {
             var teachers = await this._mediator.Send(new GetAllTeachersQuery()).ConfigureAwait(false);
-            return teachers;  
+            return teachers;
         }
 
         // GET api/<TeacherController>/5
@@ -33,11 +34,14 @@ namespace TeacherSvc.Api.Controllers
             return teacher;
         }
 
-        //// POST api/<TeacherController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
+        // POST api/<TeacherController>
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        public async Task<bool> Post([FromBody] TeacherDto value)
+        {
+            bool status = await this._mediator.Send(new TeacherRegisterCommand { Teacher = value }).ConfigureAwait(false);
+            return status;
+        }
 
         //// PUT api/<TeacherController>/5
         //[HttpPut("{id}")]

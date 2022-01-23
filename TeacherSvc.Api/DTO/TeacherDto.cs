@@ -15,7 +15,7 @@ namespace TeacherSvc.Api.DTO
         public string Qualification { get; set; }
         public string CurrentAddress { get; set; }
         public string ResidentialAddress { get; set; }
-        public DateTimeOffset ModifiedOn { get; set; }
-        public DateTimeOffset CreatedOn { get; set; }
+        public string ModifiedOn { get; set; }
+        public string CreatedOn { get; set; }
     }
 }

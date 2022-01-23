@@ -13,6 +13,11 @@ namespace TeacherSvc.Api.Configuration
                 .NewConfig()
                 .Map(dest => dest.CreatedOn, src => DateTimeOffset.UtcNow)
                 .Map(dest => dest.ModifiedOn, src => DateTimeOffset.UtcNow);
+
+            TypeAdapterConfig<Teacher, TeacherDto>
+                .NewConfig()
+                .Map(dest => dest.CreatedOn, src => src.CreatedOn.ToString("MM/dd/yyyy"))
+                .Map(dest => dest.ModifiedOn, src => src.ModifiedOn.ToString("MM/dd/yyyy"));
         }
     }
 }

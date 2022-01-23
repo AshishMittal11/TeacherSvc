@@ -45,9 +45,10 @@ namespace TeacherSvc.Api
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:5001");
+                                      builder.WithOrigins("https://localhost:5001");
                                       builder.AllowAnyMethod();
                                       builder.AllowAnyHeader();
+                                      builder.AllowAnyOrigin();
                                   });
             });
             services.AddSwaggerGen();
