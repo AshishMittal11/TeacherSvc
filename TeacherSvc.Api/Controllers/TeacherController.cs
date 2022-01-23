@@ -35,8 +35,7 @@ namespace TeacherSvc.Api.Controllers
         }
 
         // POST api/<TeacherController>
-        [HttpPost]
-        [ProducesResponseType(200, Type = typeof(bool))]
+        [HttpPost("register")]
         public async Task<bool> Post([FromBody] TeacherDto value)
         {
             bool status = await this._mediator.Send(new TeacherRegisterCommand { Teacher = value }).ConfigureAwait(false);
