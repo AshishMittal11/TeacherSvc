@@ -48,10 +48,12 @@ namespace TeacherSvc.Api.Controllers
         //{
         //}
 
-        //// DELETE api/<TeacherController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+        // DELETE api/<TeacherController>/5
+        [HttpDelete("{id}")]
+        public async Task<bool> Delete(int id)
+        {
+            bool status = await this._mediator.Send(new DeleteTeacherCommand { Id = id }).ConfigureAwait(false);
+            return status;
+        }
     }
 }
