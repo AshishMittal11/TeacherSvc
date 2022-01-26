@@ -31,6 +31,7 @@ namespace TeacherSvc.Api.CQRS.Query.QueryHandler
             try
             {
                 var likeExpression = $"{request.FirstNameChar}%";
+
                 var dbTeachers = await this._context.TeacherSet.Where(x => EF.Functions.Like(x.FirstName, likeExpression)).ToListAsync().ConfigureAwait(false);
                 return dbTeachers?.Adapt<List<TeacherDto>>() ?? new List<TeacherDto>();
             }
