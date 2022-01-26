@@ -26,6 +26,14 @@ namespace TeacherSvc.Api.Controllers
             return teachers;
         }
 
+        [HttpGet("view/{firstNameChar}")]
+        [ProducesResponseType(200, Type = typeof(List<TeacherDto>))]
+        public async Task<List<TeacherDto>> GetTeachersByFirstNameChar(string firstNameChar)
+        {
+            var teachers = await this._mediator.Send(new GetTearchersByFirstNameCharQuery { FirstNameChar = firstNameChar }).ConfigureAwait(false);
+            return teachers;
+        }
+
         // GET api/<TeacherController>/5
         [HttpGet("view/{id}")]
         public async Task<TeacherDto> GetTeacherById(int id)
