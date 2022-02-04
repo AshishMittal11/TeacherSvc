@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeacherSvc.Api.Models
 {
-
     [Table("Teacher", Schema = "dbo")]
     public class Teacher : TeacherBaseModel
     {

@@ -5,12 +5,12 @@ namespace TeacherSvc.Api.Database
 {
     public class TeacherContext : DbContext
     {
-        public TeacherContext(DbContextOptions<TeacherContext> options) : base(options)
-        {
-
-        }
+        // constructor....
+        public TeacherContext(DbContextOptions<TeacherContext> options) : base(options) { }
 
 
+        // entities....
         public DbSet<Teacher> TeacherSet { get; set; }
+        public DbSet<Qualification> QualificationSet { get; set; }
     }
 }

@@ -1,19 +1,13 @@
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using TeacherSvc.Api.Configuration;
+using TeacherSvc.Api.Cosmos;
 using TeacherSvc.Api.Database;
 
 namespace TeacherSvc.Api
@@ -51,7 +45,14 @@ namespace TeacherSvc.Api
                                       builder.AllowAnyOrigin();
                                   });
             });
+
             services.AddSwaggerGen();
+            
+            // setting up the application insights for logging and tracing...
+            services.AddApplicationInsightsTelemetry();
+
+            // this is for sending the data to the cosmos db....
+            services.Configure<CosmosSettings>(Configuration.GetSection("CosmosSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

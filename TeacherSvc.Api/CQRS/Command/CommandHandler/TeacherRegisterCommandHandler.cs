@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TeacherSvc.Api.Database;
@@ -22,18 +23,39 @@ namespace TeacherSvc.Api.CQRS.Command.CommandHandler
 
         public async Task<bool> Handle(TeacherRegisterCommand request, CancellationToken cancellationToken)
         {
-            try
+            using (var trans = _context.Database.BeginTransaction())
             {
-                var dbTeacher = request.Teacher.Adapt<Teacher>();
-                await _context.TeacherSet.AddAsync(dbTeacher).ConfigureAwait(false);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
+                try
+                {
+                    var dbTeacher = request.Teacher.Adapt<Teacher>();
+                    await _context.TeacherSet.AddAsync(dbTeacher).ConfigureAwait(false);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+
+                    // saving the qualifications of a teacher.....
+                    List<Qualification> qualifications = new List<Qualification>();
+                    foreach (var qualification in request.Teacher.Qualifications)
+                    {
+                        var dbQualification = qualification.Adapt<Qualification>();
+                        dbQualification.TeacherId = dbTeacher.Id;
+                        qualifications.Add(dbQualification);
+                    }
+
+                    if (qualifications.Count > 0)
+                    {
+                        await _context.QualificationSet.AddRangeAsync(qualifications).ConfigureAwait(false);
+                        await _context.SaveChangesAsync().ConfigureAwait(false);
+                    }
+
+                    trans.Commit();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    this._logger.LogError(ex.Message, request);
+                    throw;
+                }
             }
-            catch(Exception ex)
-            {
-                this._logger.LogError(ex.Message, request);
-                throw; 
-            } 
         }
     }
 }
